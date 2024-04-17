@@ -1,23 +1,26 @@
 'use client'
 
-import '@/assets/css/tailwind.css'
-import React, { useState } from 'react'
+import { PropsWithChildren, useRef } from 'react'
 
+import { StyleProvider, extractStaticStyle } from 'antd-style'
 import { useServerInsertedHTML } from 'next/navigation'
-import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
 
-export default function StyledComponentsRegistry({ children }: { children: React.ReactNode }) {
-  // Only create stylesheet once with lazy initial state
-  // x-ref: https://reactjs.org/docs/hooks-reference.html#lazy-initial-state
-  const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet())
+const StyleRegistry = ({ children }: PropsWithChildren) => {
+  const isInsert = useRef(false)
 
   useServerInsertedHTML(() => {
-    const styles = styledComponentsStyleSheet.getStyleElement()
-    styledComponentsStyleSheet.instance.clearTag()
+    // 避免多次渲染时重复插入样式
+    // refs: https://github.com/vercel/next.js/discussions/49354#discussioncomment-6279917
+    if (isInsert.current) return
+
+    isInsert.current = true
+
+    const styles = extractStaticStyle().map((item) => item.style)
+
     return <>{styles}</>
   })
 
-  if (typeof window !== 'undefined') return <>{children}</>
-
-  return <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>{children}</StyleSheetManager>
+  return <StyleProvider cache={extractStaticStyle.cache}>{children}</StyleProvider>
 }
+
+export default StyleRegistry

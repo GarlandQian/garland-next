@@ -1,36 +1,52 @@
 'use client'
+import { createStyles } from 'antd-style'
 
-import React from 'react'
+const useStyles = createStyles(({ token, css }) => ({
+  // 支持 css object 的写法
+  container: {
+    backgroundColor: token.colorBgLayout,
+    borderRadius: token.borderRadiusLG,
+    maxWidth: 400,
+    width: '100%',
+    height: 180,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  // 也支持通过 css 字符串模板获得和 普通 css 一致的书写体验
+  card: css`
+    color: ${token.colorTextTertiary};
+    box-shadow: ${token.boxShadow};
+    &:hover {
+      color: ${token.colorTextSecondary};
+      box-shadow: ${token.boxShadowSecondary};
+    }
 
-import { Button } from 'antd'
-import styled from 'styled-components'
+    padding: ${token.padding}px;
+    border-radius: ${token.borderRadius}px;
+    background: ${token.colorBgContainer};
+    transition: all 100ms ${token.motionEaseInBack};
 
-import useUserStore from '@/store/user'
+    margin-bottom: 8px;
+    cursor: pointer;
+  `,
+}))
 
-const Info = () => {
-  const { userInfo, token, updateUserInfo, updateAge, updateToken } = useUserStore()
+const Card = () => {
+  // styles 对象在 useStyles 方法中默认会被缓存，所以不用担心 re-render 问题
+  const { styles, cx, theme } = useStyles()
 
   return (
-    <div className="App">
-      <Li>
-        姓名：{userInfo.name} 年龄：{userInfo.age}
-      </Li>
-      <div className="flex">token：{token}</div>
-      <Button type="primary" onClick={() => updateUserInfo({ name: 'lisi', age: 24 })}>
-        更新用户
-      </Button>
-      <Button type="primary" onClick={() => updateAge(userInfo.age + 1)}>
-        更新年龄
-      </Button>
-      <Button type="primary" onClick={() => updateToken('23652')}>
-        更新token
-      </Button>
+    // 使用 cx 可以组织 className
+    <div className={cx('a-simple-create-style-demo-classname', styles.container)}>
+      <div className={styles.card}>createStyles Demo</div>
+      {/* theme 对象包含了所有的 token 与主题等信息 */}
+      <div>当前主题模式：{theme.appearance}</div>
     </div>
   )
 }
 
-const Li = styled.div`
-  color: blue;
-`
-
-export default Info
+export default Card
