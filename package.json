@@ -7,7 +7,9 @@
     "dev:l": "cross-env NODE_ENV_PLATFORM=linux next dev -p 3001",
     "build": "cross-env ANALYZE=true next build",
     "start": "next start",
-    "lint": "eslint src --fix --ext .ts,.tsx,.js,.jsx --max-warnings 0"
+    "lint": "eslint src --fix --ext .ts,.tsx,.js,.jsx --max-warnings 0",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
   },
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.0",
