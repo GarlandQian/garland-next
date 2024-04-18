@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV_PLATFORM=window next dev",
+    "dev": "cross-env NODE_ENV_PLATFORM=window next dev --turbo",
     "dev:l": "cross-env NODE_ENV_PLATFORM=linux next dev -p 3001",
     "build": "cross-env ANALYZE=true next build",
     "start": "next start",
